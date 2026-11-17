@@ -1,0 +1,36 @@
+info:
+  name: Create Task
+  type: http
+  seq: 3
+
+http:
+  method: POST
+  url: "{{baseUrl}}/tasks"
+  body:
+    type: json
+    data: |-
+      {
+        "title": "Bruno API Testing",
+        "description": "Testing CRUD operations using Bruno"
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: after-response
+      code: |-
+        const response = res.body;
+
+        if (response && response.id !== undefined) {
+          bru.setVar("taskId", String(response.id));
+          console.log("Task ID captured:", response.id);
+        } else {
+          throw new Error("Task ID missing from API response");
+        }
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false
