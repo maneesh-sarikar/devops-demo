@@ -1,5 +1,32 @@
-
+ 
 services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Containerfile
+      target: frontend
+    image: localhost/devops-frontend:latest
+    container_name: devops-frontend
+    restart: unless-stopped
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+ 
+  backend:
+    build:
+      context: .
+      dockerfile: Containerfile
+      target: backend
+    image: localhost/devops-backend:latest
+    container_name: devops-backend
+    restart: unless-stopped
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: service_healthy
+ 
   db:
     image: docker.io/library/postgres:17
     container_name: devops-postgres
@@ -13,20 +40,7 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
-
-  api:
-    build:
-      context: .
-      dockerfile: Containerfile
-    container_name: devops-api
-    restart: unless-stopped
-    env_file:
-      - .env
-    ports:
-      - "8000:8000"
-    depends_on:
-      db:
-        condition: service_healthy
-
+ 
 volumes:
   postgres_data:
+ 

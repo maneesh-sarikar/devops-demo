@@ -1,18 +1,27 @@
-cat > .gitignore <<'EOF'
-# Environment variables
-.env
+ 
 
-# Python
+.env
+.env.*
+!.env.example
+ 
+
 .venv/
+venv/
 __pycache__/
 *.py[cod]
 .pytest_cache/
+ 
 
-# IDE
+node_modules/
+dist/
+.vite/
+ 
+
 .vscode/
 .idea/
-
-# OS
 .DS_Store
 Thumbs.db
-EOF
+ 
+
+*.log
+ 
